@@ -16,7 +16,7 @@ class Parser:
         self.tabel_parsing = None
         self.prods = {}
         self.lines = []
-        self.grammar = mesin_grammar.konversi_grammar(mesin_grammar.read_grammar("src/grammar/CFG.txt"))
+        self.grammar = mesin_grammar.konversi_grammar(mesin_grammar.baca_grammar("src/grammar/CFG.txt"))
 
         with open('src/grammar/CNF.txt', 'w') as cnf:
             for item in self.grammar:

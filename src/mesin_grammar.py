@@ -2,7 +2,7 @@
 KAMUS_RULE = {}
 
 
-def read_grammar(grammar_file):
+def baca_grammar(grammar_file):
     with open(grammar_file) as cfg:
         lines = cfg.readlines()
     return [x.replace("->", "").split() for x in lines]
