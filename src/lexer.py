@@ -128,7 +128,8 @@ if __name__ == '__main__':
         ('\{',              'LCB'),
         ('[#]',             'KOMENTAR'),
         (r'\'\'\'|\"\"\"',          'KOMENTAR_MULTILINE'),
-        ('\'',             'QUOTE'),
+        (r'\'',             'KUTIP'),
+        (r'"',             'KUTIP')
     ]
     parser = argparse.ArgumentParser()
     parser.add_argument('filename', help='File Name')
