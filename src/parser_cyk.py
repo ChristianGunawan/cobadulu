@@ -12,31 +12,20 @@ class Node:
 
 class Parser:
 
-    def __init__(self, sentence):
+    def __init__(self, fileInput):
         self.tabel_parsing = None
         self.prods = {}
+        self.lines = []
         self.grammar = mesin_grammar.konversi_grammar(mesin_grammar.read_grammar("src/grammar/CFG.txt"))
 
         with open('src/grammar/CNF.txt', 'w') as cnf:
             for item in self.grammar:
                 cnf.write("%s\n" % item)
 
-        with open(sentence) as inp:
+        with open(fileInput, 'r') as inp:
 	        self.inputline = [line.strip() for line in inp if line.strip()]
-
-        incorrect = False
-        for i in range(len(self.inputline)):
-            self.input = self.inputline[i].split()
-            self.parse()
-            start_symbol = self.grammar[0][0]
-            final_nodes = [n for n in self.tabel_parsing[-1][0] if n.symbol == start_symbol]
-            if not final_nodes:
-            	print("Syntax error")
-            	print ("  " + self.inputline[i])
-            	incorrect = True
-        if not incorrect:
-            print("Accepted")
-
+        
+        
     def parse(self):
         length = len(self.input)
         self.tabel_parsing = [[[] for x in range(length - y)] for y in range(length)]
@@ -60,4 +49,22 @@ class Parser:
                             self.tabel_parsing[words_to_consider - 1][starting_cell].extend(
                                 [Node(rule[0], left, right) for left in left_nodes for right in right_nodes]
                             )
+    
+    
+    def analisa_syntax(self, fileName):
+        with open(fileName, 'r') as inp:
+            self.lines = [line.strip() for line in inp if line.strip()]
+
+        incorrect = False
+        for i in range(len(self.inputline)):
+            self.input = self.inputline[i].split()
+            self.parse()
+            start_symbol = self.grammar[0][0]
+            final_nodes = [n for n in self.tabel_parsing[-1][0] if n.symbol == start_symbol]
+            if not final_nodes:
+            	print("Syntax error")
+            	print (" " + self.lines[i])
+            	incorrect = True
+        if not incorrect:
+            print("Accepted")
 

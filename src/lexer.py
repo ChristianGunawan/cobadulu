@@ -157,3 +157,4 @@ if __name__ == '__main__':
         outfile.write(output.replace("NEWLINE","\n"))
 
     cyk = parser_cyk.Parser("__pycache__/outputfile")
+    cyk.analisa_syntax(filename)
