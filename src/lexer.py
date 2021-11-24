@@ -1,23 +1,9 @@
-#-------------------------------------------------------------------------------
-# lexer.py
-#
-# A generic regex-based Lexer/tokenizer tool.
-# See the if __main__ section in the bottom for an example.
-#
-# Eli Bendersky (eliben@gmail.com)
-# This code is in the public domain
-# Last modified: August 2010
-#-------------------------------------------------------------------------------
 import re
-import sys
-import cyk_parser
+import parser_cyk
 import argparse
 import os
 
 class Token(object):
-    """ A simple Token structure.
-        Contains the token type, value and position.
-    """
     def __init__(self, type, val, pos):
         self.type = type
 
@@ -26,37 +12,12 @@ class Token(object):
 
 
 class LexerError(Exception):
-    """ Lexer error exception.
-        pos:
-            Position in the input line where the error occurred.
-    """
     def __init__(self, pos):
         self.pos = pos
 
 
 class Lexer(object):
-    """ A simple regex-based lexer/tokenizer.
-        See below for an example of usage.
-    """
     def __init__(self, rules, skip_whitespace=False):
-        """ Create a lexer.
-            rules:
-                A list of rules. Each rule is a `regex, type`
-                pair, where `regex` is the regular expression used
-                to recognize the token and `type` is the type
-                of the token to return when it's recognized.
-            skip_whitespace:
-                If True, whitespace (\s+) will be skipped and not
-                reported by the lexer. Otherwise, you have to
-                specify your rules for whitespace, or it will be
-                flagged as an error.
-        """
-        # All the regexes are concatenated into a single one
-        # with named groups. Since the group names must be valid
-        # Python identifiers, but the token types used by the
-        # user are arbitrary strings, we auto-generate the group
-        # names and map them to token types.
-        #
         idx = 1
         regex_parts = []
         self.group_type = {}
@@ -72,19 +33,11 @@ class Lexer(object):
         self.re_ws_skip = re.compile('[\S^\n]')
 
     def input(self, buf):
-        """ Initialize the lexer with a buffer as input.
-        """
         self.buf = buf
         self.pos = 0
 
     def token(self):
-        """ Return the next token (a Token object) found in the
-            input buffer. None is returned if the end of the
-            buffer was reached.
-            In case of a lexing error (the current chunk of the
-            buffer matches no rule), a LexerError is raised with
-            the position of the error.
-        """
+
         if self.pos >= len(self.buf):
             return None
         else:
@@ -104,12 +57,10 @@ class Lexer(object):
                 self.pos = m.end()
                 return tok
 
-            # if we're here, no rule matched
+
             raise LexerError(self.pos)
 
     def tokens(self):
-        """ Returns an iterator to the tokens found in the buffer.
-        """
         while 1:
             tok = self.token()
             if tok is None: break
@@ -126,8 +77,6 @@ def write_files_output(name_out) :
 if __name__ == '__main__':
     
     rules = [
-        # RESERVED WORDS
-
         # RESERVED WORDS
         (r'\n',               'NEWLINE'),
         ('\\n',               'NEWLINE'),
@@ -160,8 +109,8 @@ if __name__ == '__main__':
         ('\d+',             'NUMBER'),
         ('[a-zA-Z_]\w*',    'IDENTIFIER'),
         ('[?]',              'IDENTIFIER'),
-        # COMPARISON
-        (r'==|!=|>=|<=|>|<|in|not in|is|is not',   'COMPARISON'),
+        # KOMPARASI
+        (r'==|!=|>=|<=|>|<|in|not in|is|is not',   'KOMPARASI'),
         #ASSIGN
         ('=', 'ASSIGN'),     
         (r'\/\/=|\*\*=|\+=|\-=|\*=|\/=|\%=', 'ASSIGN'),
@@ -177,8 +126,8 @@ if __name__ == '__main__':
         ('\[',              'LSB'),
         ('\]',              'RSB'),
         ('\{',              'LCB'),
-        ('[#]',             'COMMENT'),
-        ('\'\'\'',          'COMMENT_MULTILINE'),
+        ('[#]',             'KOMENTAR'),
+        ('\'\'\'',          'KOMENTAR_MULTILINE'),
         ('\'',             'QUOTE'),
     ]
     parser = argparse.ArgumentParser()
@@ -198,7 +147,6 @@ if __name__ == '__main__':
                 output = output
             else:
                 output += str(tok) + ' '
-            #print(tok)
     except LexerError as err:
         print('LexerError at position %s' % err.pos)
 
@@ -208,4 +156,4 @@ if __name__ == '__main__':
     with open('__pycache__/outputfile', 'w') as outfile:
         outfile.write(output.replace("NEWLINE","\n"))
 
-    cyk = cyk_parser.Parser("__pycache__/outputfile")
+    cyk = parser_cyk.Parser("__pycache__/outputfile")
