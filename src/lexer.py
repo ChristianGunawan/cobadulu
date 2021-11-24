@@ -127,7 +127,7 @@ if __name__ == '__main__':
         ('\]',              'RSB'),
         ('\{',              'LCB'),
         ('[#]',             'KOMENTAR'),
-        ('\'\'\'',          'KOMENTAR_MULTILINE'),
+        (r'\'\'\'|\"\"\"',          'KOMENTAR_MULTILINE'),
         ('\'',             'QUOTE'),
     ]
     parser = argparse.ArgumentParser()
@@ -148,7 +148,8 @@ if __name__ == '__main__':
             else:
                 output += str(tok) + ' '
     except LexerError as err:
-        print('LexerError at position %s' % err.pos)
+        # print('LexerError at position %s' % err.pos)
+        pass
 
     if not os.path.exists("__pycache__"):
         os.makedirs("__pycache__")

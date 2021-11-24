@@ -63,7 +63,7 @@ class Parser:
             final_nodes = [n for n in self.tabel_parsing[-1][0] if n.symbol == start_symbol]
             if not final_nodes:
             	print("Syntax error")
-            	print (" " + self.lines[i])
+            	print (f"  pada line {i+1}\n    {self.lines[i]}")
             	incorrect = True
         if not incorrect:
             print("Accepted")
